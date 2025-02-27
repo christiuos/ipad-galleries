@@ -98,20 +98,20 @@ const LightboxFullClient = (props: LightboxFullProps) => {
   };
 
   return (
-    <div className="fixed inset-0 bg-black flex items-center justify-center">
-      <div className={`relative bg-black overflow-auto ${
+    <div className="fixed inset-0 bg-black flex items-start justify-center overflow-auto">
+      <div className={`relative bg-black overflow-auto w-full ${
         viewportHeight <= 1024 
-          ? 'pt-0 -mt-[10px]' 
+          ? 'pt-[40px] mt-[20px]' 
           : viewportHeight > 1024 && viewportHeight <= 1200
-            ? 'pt-0 mt-[5px]'
+            ? 'pt-[45px] mt-[25px]'
             : viewportHeight >= 1300 
-              ? 'pt-0 mt-[20px]' 
-              : 'pt-0'
+              ? 'pt-[50px] mt-[30px]' 
+              : 'pt-[40px] mt-[20px]'
       }`} style={{ 
         width: viewportHeight >= 1300 ? '1024px' : viewportHeight > 1024 && viewportHeight <= 1200 ? '820px' : '834px', 
-        height: viewportHeight >= 1300 ? '1366px' : viewportHeight > 1024 && viewportHeight <= 1200 ? '1180px' : '1194px', 
+        minHeight: '100%',
         maxWidth: '100vw', 
-        maxHeight: '100vh' 
+        paddingBottom: '50px'
       }}>
         {/* Close Button */}
         <button className="absolute top-4 right-4 z-50">
@@ -123,21 +123,21 @@ const LightboxFullClient = (props: LightboxFullProps) => {
         {/* Header Section */}
         <div className={`px-8 ${
           viewportHeight <= 1024 
-            ? 'pt-6' 
+            ? 'pt-4 mt-2' 
             : viewportHeight > 1024 && viewportHeight <= 1200
-              ? 'pt-7'
+              ? 'pt-5 mt-3'
               : viewportHeight >= 1300 
-                ? 'pt-10' 
-                : 'pt-8'
+                ? 'pt-6 mt-4' 
+                : 'pt-4 mt-2'
         }`}>
-          <h1 className={`text-white ${
-            viewportHeight >= 1300 ? 'text-[42px]' : 'text-[32px]'
-          } font-bold`}>
+          <h1 className={`text-white font-bold ${
+            viewportHeight >= 1300 ? 'text-[38px]' : 'text-[32px]'
+          }`}>
             {props.title}
           </h1>
-          <h2 className={`text-white ${
-            viewportHeight >= 1300 ? 'text-[42px]' : 'text-[32px]'
-          } font-bold`}>
+          <h2 className={`text-white font-bold ${
+            viewportHeight >= 1300 ? 'text-[38px]' : 'text-[32px]'
+          }`}>
             {props.subtitle}
           </h2>
           
