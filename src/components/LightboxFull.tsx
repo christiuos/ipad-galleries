@@ -68,23 +68,16 @@ const LightboxFullClient = (props: LightboxFullProps) => {
   
   // Calculate ad position based on viewport height and description expansion
   const getAdPosition = () => {
-    // Base position adjustment for expanded description
-    const expandedAdjustment = isDescriptionExpanded ? 'translate-y-[80px]' : '';
+    // Reduced adjustment for expanded description from 80px to 40px
+    const expandedAdjustment = isDescriptionExpanded ? 'translate-y-[40px]' : '';
     
-    // For iPad Mini (height around 1024px or less)
+    // Special case for iPad Mini
     if (viewportHeight <= 1024) {
-      return `bottom-[45px] ${expandedAdjustment}`;
+      return `bottom-[60px] ${expandedAdjustment}`; // Increased spacing for iPad Mini
     }
-    // For iPad Air (height around 1180px)
-    else if (viewportHeight > 1024 && viewportHeight <= 1200) {
-      return `bottom-[170px] ${expandedAdjustment}`;
-    }
-    // For larger iPads (iPad Pro)
-    else if (viewportHeight >= 1300) {
-      return `bottom-[90px] ${expandedAdjustment}`;
-    }
-    // For regular iPad
-    return `bottom-[150px] ${expandedAdjustment}`;
+    
+    // Consistent positioning for all other devices
+    return `bottom-[90px] ${expandedAdjustment}`;
   };
 
   // Calculate image height based on viewport and description expansion
@@ -92,8 +85,8 @@ const LightboxFullClient = (props: LightboxFullProps) => {
     // Base height adjustment for browser experience
     const browserAdjustment = viewportWidth < 768 ? 'h-[400px]' : '';
     
-    // Adjustment for expanded description
-    const expandedAdjustment = isDescriptionExpanded ? 'mt-[60px]' : '';
+    // Reduced adjustment for expanded description from 60px to 30px
+    const expandedAdjustment = isDescriptionExpanded ? 'mt-[30px]' : '';
     
     if (viewportHeight <= 1024) {
       // iPad Mini
