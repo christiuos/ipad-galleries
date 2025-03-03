@@ -20,6 +20,7 @@ const LightboxFullClient = (props: LightboxFullProps) => {
   const [isDescriptionExpanded, setIsDescriptionExpanded] = useState(false);
   const [isMounted, setIsMounted] = useState(false);
   const [viewportHeight, setViewportHeight] = useState(0);
+  const [viewportWidth, setViewportWidth] = useState(0);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   
   // This ensures the component only renders on the client
@@ -27,18 +28,21 @@ const LightboxFullClient = (props: LightboxFullProps) => {
   useEffect(() => {
     setIsMounted(true);
     
-    const updateViewportHeight = () => {
+    const updateViewportDimensions = () => {
       setViewportHeight(window.innerHeight);
+      setViewportWidth(window.innerWidth);
     };
     
-    // Set initial height
-    updateViewportHeight();
+    // Set initial dimensions
+    updateViewportDimensions();
     
     // Add event listener for resize
-    window.addEventListener('resize', updateViewportHeight);
+    window.addEventListener('resize', updateViewportDimensions);
     
     // Clean up
-    return () => window.removeEventListener('resize', updateViewportHeight);
+    return () => {
+      window.removeEventListener('resize', updateViewportDimensions);
+    };
   }, []);
 
   // Return null during server-side rendering
@@ -62,38 +66,47 @@ const LightboxFullClient = (props: LightboxFullProps) => {
     );
   };
   
-  // Calculate ad position based on viewport height
+  // Calculate ad position based on viewport height and description expansion
   const getAdPosition = () => {
+    // Base position adjustment for expanded description
+    const expandedAdjustment = isDescriptionExpanded ? 'translate-y-[80px]' : '';
+    
     // For iPad Mini (height around 1024px or less)
     if (viewportHeight <= 1024) {
-      return 'bottom-[45px]';
+      return `bottom-[45px] ${expandedAdjustment}`;
     }
     // For iPad Air (height around 1180px)
     else if (viewportHeight > 1024 && viewportHeight <= 1200) {
-      return 'bottom-[170px]';
+      return `bottom-[170px] ${expandedAdjustment}`;
     }
     // For larger iPads (iPad Pro)
     else if (viewportHeight >= 1300) {
-      return 'bottom-[90px]';
+      return `bottom-[90px] ${expandedAdjustment}`;
     }
     // For regular iPad
-    return 'bottom-[150px]';
+    return `bottom-[150px] ${expandedAdjustment}`;
   };
 
-  // Calculate image height based on viewport
+  // Calculate image height based on viewport and description expansion
   const getImageHeight = () => {
+    // Base height adjustment for browser experience
+    const browserAdjustment = viewportWidth < 768 ? 'h-[400px]' : '';
+    
+    // Adjustment for expanded description
+    const expandedAdjustment = isDescriptionExpanded ? 'mt-[60px]' : '';
+    
     if (viewportHeight <= 1024) {
       // iPad Mini
-      return 'h-[490px]';
+      return `h-[490px] ${browserAdjustment} ${expandedAdjustment}`;
     } else if (viewportHeight > 1024 && viewportHeight <= 1200) {
       // iPad Air
-      return 'h-[510px]';
+      return `h-[510px] ${browserAdjustment} ${expandedAdjustment}`;
     } else if (viewportHeight >= 1300) {
       // iPad Pro - larger image
-      return 'h-[650px]';
+      return `h-[650px] ${browserAdjustment} ${expandedAdjustment}`;
     } else {
       // Regular iPad
-      return 'h-[516px]';
+      return `h-[516px] ${browserAdjustment} ${expandedAdjustment}`;
     }
   };
 
@@ -111,7 +124,8 @@ const LightboxFullClient = (props: LightboxFullProps) => {
         width: viewportHeight >= 1300 ? '1024px' : viewportHeight > 1024 && viewportHeight <= 1200 ? '820px' : '834px', 
         height: viewportHeight >= 1300 ? '1366px' : viewportHeight > 1024 && viewportHeight <= 1200 ? '1180px' : '1194px', 
         maxWidth: '100vw', 
-        maxHeight: '100vh' 
+        maxHeight: '100vh',
+        overflowY: 'auto' // Ensure scrolling works in browser
       }}>
         {/* Close Button */}
         <button className="absolute top-4 right-4 z-50">
@@ -219,8 +233,9 @@ const LightboxFullClient = (props: LightboxFullProps) => {
             {isDescriptionExpanded ? props.description : props.description.slice(0, 150)}
             {props.description.length > 150 && (
               <button
-                className="text-[#3E86E4] ml-1"
+                className="text-[#3E86E4] ml-1 hover:underline focus:outline-none"
                 onClick={() => setIsDescriptionExpanded(!isDescriptionExpanded)}
+                aria-expanded={isDescriptionExpanded}
               >
                 {isDescriptionExpanded ? 'Read Less' : 'Read More'}
               </button>
@@ -228,10 +243,10 @@ const LightboxFullClient = (props: LightboxFullProps) => {
           </div>
         </div>
 
-        {/* Main Image */}
+        {/* Main Image - Add transition for smooth movement */}
         <div className="px-8 mt-0 relative">
           <div 
-            className={`w-full bg-center bg-cover bg-no-repeat overflow-hidden relative ${getImageHeight()}`}
+            className={`w-full bg-center bg-cover bg-no-repeat overflow-hidden relative ${getImageHeight()} transition-all duration-300 ease-in-out`}
             style={{ 
               backgroundImage: `url(${galleryImages[currentImageIndex] || '/placeholder-image.jpg'})`,
               backgroundSize: 'cover',
@@ -264,8 +279,8 @@ const LightboxFullClient = (props: LightboxFullProps) => {
           </div>
         </div>
 
-        {/* Responsive ad placement */}
-        <div className={`absolute ${getAdPosition()} left-1/2 transform -translate-x-1/2`}>
+        {/* Responsive ad placement - Add transition for smooth movement */}
+        <div className={`absolute ${getAdPosition()} left-1/2 transform -translate-x-1/2 transition-all duration-300 ease-in-out`}>
           <div className={`max-w-[90vw] bg-[rgba(255,106,108,0.77)] flex items-center justify-center border-4 border-white ${
             viewportHeight >= 1300 
               ? 'w-[900px] h-[130px]'
