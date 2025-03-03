@@ -66,7 +66,7 @@ const LightboxFullClient = (props: LightboxFullProps) => {
   const getAdPosition = () => {
     // For iPad Mini (height around 1024px or less)
     if (viewportHeight <= 1024) {
-      return 'bottom-[45px]';
+      return 'bottom-[35px]';
     }
     // For iPad Air (height around 1180px)
     else if (viewportHeight > 1024 && viewportHeight <= 1200) {
