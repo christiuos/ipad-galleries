@@ -66,7 +66,7 @@ const LightboxFullClient = (props: LightboxFullProps) => {
   const getAdPosition = () => {
     // For iPad Mini (height around 1024px or less)
     if (viewportHeight <= 1024) {
-      return 'bottom-[35px]';
+      return 'bottom-[45px]';
     }
     // For iPad Air (height around 1180px)
     else if (viewportHeight > 1024 && viewportHeight <= 1200) {
@@ -98,20 +98,20 @@ const LightboxFullClient = (props: LightboxFullProps) => {
   };
 
   return (
-    <div className="fixed inset-0 bg-black flex items-start justify-center overflow-auto">
-      <div className={`relative bg-black overflow-auto w-full ${
+    <div className="fixed inset-0 bg-black flex items-center justify-center">
+      <div className={`relative bg-black overflow-auto ${
         viewportHeight <= 1024 
-          ? 'pt-[40px] mt-[20px]' 
+          ? 'pt-0 -mt-[10px]' 
           : viewportHeight > 1024 && viewportHeight <= 1200
-            ? 'pt-[45px] mt-[25px]'
+            ? 'pt-0 mt-[5px]'
             : viewportHeight >= 1300 
-              ? 'pt-[50px] mt-[30px]' 
-              : 'pt-[40px] mt-[20px]'
+              ? 'pt-0 mt-[20px]' 
+              : 'pt-0'
       }`} style={{ 
         width: viewportHeight >= 1300 ? '1024px' : viewportHeight > 1024 && viewportHeight <= 1200 ? '820px' : '834px', 
-        minHeight: '100%',
+        height: viewportHeight >= 1300 ? '1366px' : viewportHeight > 1024 && viewportHeight <= 1200 ? '1180px' : '1194px', 
         maxWidth: '100vw', 
-        paddingBottom: '50px'
+        maxHeight: '100vh' 
       }}>
         {/* Close Button */}
         <button className="absolute top-4 right-4 z-50">
@@ -123,21 +123,21 @@ const LightboxFullClient = (props: LightboxFullProps) => {
         {/* Header Section */}
         <div className={`px-8 ${
           viewportHeight <= 1024 
-            ? 'pt-4 mt-2' 
+            ? 'pt-6' 
             : viewportHeight > 1024 && viewportHeight <= 1200
-              ? 'pt-5 mt-3'
+              ? 'pt-7'
               : viewportHeight >= 1300 
-                ? 'pt-6 mt-4' 
-                : 'pt-4 mt-2'
+                ? 'pt-10' 
+                : 'pt-8'
         }`}>
-          <h1 className={`text-white font-bold ${
-            viewportHeight >= 1300 ? 'text-[38px]' : 'text-[32px]'
-          }`}>
+          <h1 className={`text-white ${
+            viewportHeight >= 1300 ? 'text-[42px]' : 'text-[32px]'
+          } font-bold`}>
             {props.title}
           </h1>
-          <h2 className={`text-white font-bold ${
-            viewportHeight >= 1300 ? 'text-[38px]' : 'text-[32px]'
-          }`}>
+          <h2 className={`text-white ${
+            viewportHeight >= 1300 ? 'text-[42px]' : 'text-[32px]'
+          } font-bold`}>
             {props.subtitle}
           </h2>
           
