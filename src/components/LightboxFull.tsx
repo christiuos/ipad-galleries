@@ -66,20 +66,6 @@ const LightboxFullClient = (props: LightboxFullProps) => {
     );
   };
   
-  // Calculate ad position based on viewport height and description expansion
-  const getAdPosition = () => {
-    // Reduced adjustment for expanded description from 80px to 40px
-    const expandedAdjustment = isDescriptionExpanded ? 'translate-y-[40px]' : '';
-    
-    // Special case for iPad Mini
-    if (viewportHeight <= 1024) {
-      return `bottom-[60px] ${expandedAdjustment}`; // Increased spacing for iPad Mini
-    }
-    
-    // Consistent positioning for all other devices
-    return `bottom-[90px] ${expandedAdjustment}`;
-  };
-
   // Calculate image height based on viewport and description expansion
   const getImageHeight = () => {
     // Base height adjustment for browser experience
@@ -88,32 +74,43 @@ const LightboxFullClient = (props: LightboxFullProps) => {
     // Reduced adjustment for expanded description from 60px to 30px
     const expandedAdjustment = isDescriptionExpanded ? 'mt-[30px]' : '';
     
+    // Use the same reliable approach for all iPad models
+    // iPad Mini height works well, so we'll use similar proportions for all
     if (viewportHeight <= 1024) {
       // iPad Mini
       return `h-[490px] ${browserAdjustment} ${expandedAdjustment}`;
     } else if (viewportHeight > 1024 && viewportHeight <= 1200) {
-      // iPad Air
+      // iPad Air - similar proportion to iPad Mini
       return `h-[510px] ${browserAdjustment} ${expandedAdjustment}`;
     } else if (viewportHeight >= 1300) {
-      // iPad Pro - larger image
-      return `h-[650px] ${browserAdjustment} ${expandedAdjustment}`;
+      // iPad Pro - similar proportion to iPad Mini but larger
+      return `h-[600px] ${browserAdjustment} ${expandedAdjustment}`;
     } else {
       // Regular iPad
       return `h-[516px] ${browserAdjustment} ${expandedAdjustment}`;
     }
   };
 
+  // Calculate ad position based on viewport height and description expansion
+  const getAdPosition = () => {
+    // Reduced adjustment for expanded description from 80px to 40px
+    const expandedAdjustment = isDescriptionExpanded ? 'translate-y-[40px]' : '';
+    
+    // Use consistent positioning for all devices, similar to iPad Mini
+    if (viewportHeight <= 1024) {
+      return `bottom-[60px] ${expandedAdjustment}`;
+    } else if (viewportHeight > 1024 && viewportHeight <= 1200) {
+      return `bottom-[70px] ${expandedAdjustment}`;
+    } else if (viewportHeight >= 1300) {
+      return `bottom-[120px] ${expandedAdjustment}`;
+    } else {
+      return `bottom-[90px] ${expandedAdjustment}`;
+    }
+  };
+
   return (
     <div className="fixed inset-0 bg-black flex items-center justify-center">
-      <div className={`relative bg-black overflow-auto ${
-        viewportHeight <= 1024 
-          ? 'pt-0 -mt-[10px]' 
-          : viewportHeight > 1024 && viewportHeight <= 1200
-            ? 'pt-0 mt-[5px]'
-            : viewportHeight >= 1300 
-              ? 'pt-0 mt-[20px]' 
-              : 'pt-0'
-      }`} style={{ 
+      <div className="relative bg-black overflow-auto" style={{ 
         width: viewportHeight >= 1300 ? '1024px' : viewportHeight > 1024 && viewportHeight <= 1200 ? '820px' : '834px', 
         height: viewportHeight >= 1300 ? '1366px' : viewportHeight > 1024 && viewportHeight <= 1200 ? '1180px' : '1194px', 
         maxWidth: '100vw', 
@@ -236,14 +233,15 @@ const LightboxFullClient = (props: LightboxFullProps) => {
           </div>
         </div>
 
-        {/* Main Image - Add transition for smooth movement */}
+        {/* Main Image */}
         <div className="px-8 mt-0 relative">
           <div 
-            className={`w-full bg-center bg-cover bg-no-repeat overflow-hidden relative ${getImageHeight()} transition-all duration-300 ease-in-out`}
+            className={`w-full bg-center bg-no-repeat overflow-hidden relative ${getImageHeight()}`}
             style={{ 
               backgroundImage: `url(${galleryImages[currentImageIndex] || '/placeholder-image.jpg'})`,
-              backgroundSize: 'cover',
-              backgroundPosition: 'center'
+              backgroundSize: 'contain',
+              backgroundPosition: 'center',
+              backgroundRepeat: 'no-repeat'
             }}
           >
             {/* Previous Button - Overlayed on left side */}
@@ -276,13 +274,13 @@ const LightboxFullClient = (props: LightboxFullProps) => {
         <div className={`absolute ${getAdPosition()} left-1/2 transform -translate-x-1/2 transition-all duration-300 ease-in-out`}>
           <div className={`max-w-[90vw] bg-[rgba(255,106,108,0.77)] flex items-center justify-center border-4 border-white ${
             viewportHeight >= 1300 
-              ? 'w-[900px] h-[130px]'
+              ? 'w-[1000px] h-[150px]'
               : viewportHeight > 1024 && viewportHeight <= 1200
                 ? 'w-[720px] h-[107px]'
                 : 'w-[744px] h-[107px]'
           }`}>
             <span className={`text-white font-bold ${
-              viewportHeight >= 1300 ? 'text-[40px]' : 'text-[32px]'
+              viewportHeight >= 1300 ? 'text-[48px]' : 'text-[32px]'
             }`}>
               AD PLACEMENT GOES HERE
             </span>
